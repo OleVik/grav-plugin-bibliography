@@ -1,0 +1,13 @@
+{
+    "name": "academicpuma/styles",
+    "description": "Citation Style Language (CSL) Stylesheet Repository",
+    "type": "library",
+    "license": "Creative Commons Attribution-ShareAlike 3.0 License",
+    "authors": [
+        {
+            "name": "seboettg",
+            "email": "boettger@cs.uni-kassel.de"
+        }
+    ],
+    "require": {}
+}

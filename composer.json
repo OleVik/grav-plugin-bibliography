@@ -1,0 +1,7 @@
+{
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+    "require": {
+        "academicpuma/citeproc-php": "dev-master"
+    }
+}
