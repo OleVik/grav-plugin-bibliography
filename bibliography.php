@@ -50,6 +50,9 @@ class BibliographyPlugin extends Plugin
                                 $data = json_decode($file);
                                 $biblio = "\n";
                                 foreach ($data as $key => $item) {
+                                    if (isset($item->id)) {
+                                        $key = $item->id;
+                                    }
                                     $biblio .= '[^' . $key . ']: ' . $citeProc->render($item) . "\n";
                                 }
                                 $biblio = strip_tags($biblio, '<a>');
