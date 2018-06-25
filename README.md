@@ -9,7 +9,7 @@ Uses [Citeproc-PHP](https://github.com/seboettg/citeproc-php) for parsing and fo
 1. Download the zip version of [this repository](https://github.com/OleVik/grav-plugin-bibliography/archive/master.zip) and unzip it under `/your/site/grav/user/plugins`.
 2. Rename the folder to `bibliography`.
 
-You should now have all the plugin files under:
+You should now have all the plugin files under
 
     /your/site/grav/user/plugins/bibliography
 
