@@ -15,7 +15,7 @@ You should now have all the plugin files under
 
 The plugin is enabled by default, and can be disabled by copying `user/plugins/bibliography/bibliography.yaml` into `user/config/plugins/bibliography.yaml` and setting `enabled: false`.
 
-Markdown Extra must be enabled in your `system.yaml` for footnotes to function. That is, it should look like this:
+Markdown Extra must be enabled in your Grav-config (`system.yaml`) for footnotes to function. That is, it should look like this:
 
 ```
 pages:
