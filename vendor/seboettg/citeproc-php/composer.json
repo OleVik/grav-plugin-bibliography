@@ -1,0 +1,44 @@
+{
+    "name": "seboettg/citeproc-php",
+    "description": "Full-featured CSL processor (https://citationstyles.org)",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Böttger",
+            "email": "seboettg@gmail.com",
+            "homepage": "http://sebastianboettger.net",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/seboettg/citeproc-php/issues"
+    },
+    "autoload": {
+        "psr-4": {"": "src/"}
+    },
+    "require": {
+        "seboettg/collection": "^1.2",
+        "myclabs/php-enum": "^1.5",
+        "symfony/polyfill-mbstring": "^1.3"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "^1",
+        "phpunit/phpunit": "6.0.13"
+    },
+
+    "scripts": {
+        "post-install-cmd": [
+            "./install.sh styles-distribution",
+            "./install.sh locales",
+            "cd ./tests/fixtures/basic-tests/; ./processor.py -g",
+            "chmod +x vendor/bin/phpunit"
+        ],
+        "post-update-cmd": [
+            "./install.sh styles-distribution",
+            "./install.sh locales",
+            "cd ./tests/fixtures/basic-tests/; ./processor.py -g",
+            "chmod +x vendor/bin/phpunit"
+        ],
+        "test": "vendor/bin/phpunit"
+    }
+}

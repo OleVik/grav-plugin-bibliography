@@ -1,0 +1,22 @@
+form:
+  fields:
+    tabs:
+      type: tabs
+      active: 1
+      fields:
+        options:
+          type: tab
+          fields:
+            bibliography:
+              type: section
+              title: Bibliography
+              underline: true
+              fields:
+                header.bibliography:
+                  type: filepicker
+                  folder: 'user/data/bibliography'
+                  preview_images: false
+                  label: Bibliography-file
+                  help: Sets which file to find citations in
+                  accept:
+                    - .json

@@ -1,26 +1,35 @@
 name: Bibliography
-version: 1.0.0
+version: 2.0.0
 description: "Renders a Bibliography-file into footnotes and appends it to the page."
-icon: asterisk
+icon: book
 author:
   name: Ole Vik
   email: git@olevik.me
   url: http://olevik.me
 homepage: https://github.com/olevik/grav-plugin-bibliography
-keywords: responsive, srcset
+keywords: bibliography, citations, citation, cite, citeproc
 bugs: https://github.com/olevik/grav-plugin-bibliography/issues
 license: MIT
 
 form:
   validation: loose
   fields:
-    dropdown.enabled:
-        type: toggle
-        label: Dropdown in navbar
-        highlight: 1
-        default: 1
-        options:
-          1: PLUGIN_ADMIN.ENABLED
-          0: PLUGIN_ADMIN.DISABLED
-        validate:
-          type: bool
+    enabled:
+      type: toggle
+      label: Plugin Status
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    bibliography_files:
+      type: file
+      label: Bibliography-files
+      multiple: true
+      destination: 'user/data/bibliography'
+      random_name: false
+      avoid_overwriting: false
+      limit: 10
+      accept:
+        - .json

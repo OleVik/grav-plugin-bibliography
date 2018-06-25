@@ -1,0 +1,24 @@
+checks:
+    php: true
+
+filter:
+    excluded_paths:
+        - 'tests/'
+        - 'vendor/'
+        - 'styles/'
+        - 'locales/'
+        - 'doc/'
+        - 'review/'
+
+coding_style:
+    php:
+        spaces:
+            around_operators:
+                concatenation: true
+
+build:
+    environment:
+        php:
+            version: 7.0.20
+            ini:
+                'date.timezone': 'Europe/Berlin'

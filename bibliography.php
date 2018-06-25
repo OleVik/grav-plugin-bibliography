@@ -5,58 +5,105 @@ use Grav\Common\Data;
 use Grav\Common\Plugin;
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
+use Grav\Common\Data\Blueprints;
 use RocketTheme\Toolbox\Event\Event;
 require __DIR__ . '/vendor/autoload.php';
-use AcademicPuma\CiteProc\CiteProc;
+use Seboettg\CiteProc\StyleSheet;
+use Seboettg\CiteProc\CiteProc;
 
+/**
+ * Bibliography Plugin Class
+ * 
+ * Reads a Bibliography-file (.json) with academic references 
+ * and renders it as footnotes at the end of the page. 
+ * Allows for a variety of styles and languages using CSL.
+ *
+ * Class BibliographyPlugin
+ * 
+ * @package Grav\Plugin
+ * @return  string Formatted Markdown Footnotes
+ * @author  Ole Vik <git@olevik.me>
+ * @license MIT License by Ole Vik
+ */
 class BibliographyPlugin extends Plugin
 {
-
-    public static function getSubscribedEvents() {
+    /**
+     * Register events
+     *
+     * @return void
+     */
+    public static function getSubscribedEvents()
+    {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onPluginsInitialized' => ['onPluginsInitialized', 0]
         ];
     }
-    public function onPluginsInitialized() {
-        $this->enable([
-            'onPageContentRaw' => ['onPageContentRaw', 0],
-        ]);
+
+    /**
+     * Initialize events
+     *
+     * @return void
+     */
+    public function onPluginsInitialized()
+    {
+        if ($this->isAdmin()) {
+            $this->active = false;
+            $this->enable(
+                [
+                    'onBlueprintCreated' => ['onBlueprintCreated', 0]
+                ]
+            );
+        } else {
+            $this->enable(
+                [
+                    'onPageContentRaw' => ['onPageContentRaw', 0]
+                ]
+            );
+        }
     }
 
-    public function onPageContentRaw(Event $event) {
+    /**
+     * Process raw Markdown and footnotes
+     *
+     * @param Event $event RocketTheme\Toolbox\Event\Event
+     * 
+     * @return void
+     */
+    public function onPageContentRaw(Event $event)
+    {
         $page = $event['page'];
-        $pluginsobject = (array) $this->config->get('plugins');
-        $systemobject = (array) $this->config->get('system');
-        if ($systemobject['debugger']['enabled']) {
+        $plugin = (array) $this->config->get('plugins');
+        $system = (array) $this->config->get('system');
+        if ($system['debugger']['enabled']) {
             $this->grav['debugger']->startTimer('bibliography', 'Bibliography');
         }
-        $pageobject = $this->grav['page'];
-        if ($systemobject['pages']['markdown']['extra']) {
-            if (isset($pluginsobject['bibliography'])) {
-                if ($pluginsobject['bibliography']['enabled']) {
-                    if (isset($pageobject->header()->bibliography)) {
-                        $bibliography_file = $pageobject->path() . '/' . $pageobject->header()->bibliography;
-                        if (file_exists($bibliography_file)) {
-                            $fileinfo = pathinfo($bibliography_file);
+
+        $extra = [
+            "csl-entry" => function ($cslItem, $renderedText) {
+                return '[^' . trim($cslItem->id, "[]") . ']: ' . $renderedText;
+            }
+        ];
+
+        $page = $this->grav['page'];
+        if ($system['pages']['markdown']['extra']) {
+            if (isset($plugin['bibliography'])) {
+                if ($plugin['bibliography']['enabled']) {
+                    if (isset($page->header()->bibliography)) {
+                        $bibliography = $page->header()->bibliography;
+                        $bibfile = 'user://data/bibliography/' . $bibliography;
+                        if (file_exists($bibfile)) {
+                            $fileinfo = pathinfo($bibfile);
                             if ($fileinfo['extension'] == 'json') {
                                 $raw = $page->getRawContent();
-                                
-                                $bibliographyStyleName = $pluginsobject['bibliography']['bibliography_style'];
-                                $lang = $pluginsobject['bibliography']['bibliography_lang'];
-                                $csl = CiteProc::loadStyleSheet($bibliographyStyleName);
-                                $citeProc = new CiteProc($csl, $lang);
-                                $file = file_get_contents($bibliography_file);
-
+                                $styleName = $plugin['bibliography']['style'];
+                                $lang = $plugin['bibliography']['locale'];
+                                $style = StyleSheet::loadStyleSheet($styleName);
+                                $citeProc = new CiteProc($style, $lang, $extra);
+                                $file = file_get_contents($bibfile);
                                 $data = json_decode($file);
-                                $biblio = "\n";
-                                foreach ($data as $key => $item) {
-                                    if (isset($item->id)) {
-                                        $key = $item->id;
-                                    }
-                                    $biblio .= '[^' . $key . ']: ' . $citeProc->render($item) . "\n";
-                                }
-                                $biblio = strip_tags($biblio, '<a>');
-                                $raw .= $biblio;
+                                $biblio = $citeProc->render($data, "bibliography");
+                                $biblio = strip_tags($biblio);
+                                $raw .= "\n\n" . $biblio;
                                 $page->setRawContent($raw);
                             }
                         }
@@ -64,8 +111,23 @@ class BibliographyPlugin extends Plugin
                 }
             }
         }
-        if ($systemobject['debugger']['enabled']) {
+        if ($system['debugger']['enabled']) {
             $this->grav['debugger']->stopTimer('bibliography');
         }
+    }
+
+    /**
+     * Register blueprints
+     *
+     * @param Event $event RocketTheme\Toolbox\Event\Event
+     * 
+     * @return void
+     */
+    public function onBlueprintCreated(Event $event)
+    {
+        $blueprint = $event['blueprint'];
+        $blueprints = new Blueprints(__DIR__ . '/blueprints/');
+        $extends = $blueprints->get($this->name);
+        $blueprint->extend($extends, true);
     }
 }

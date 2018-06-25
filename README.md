@@ -2,11 +2,11 @@
 
 Reads a Bibliography-file (`.json`) with academic references and renders it as footnotes at the end of the page. Allows for a variety of styles and languages using [CSL](http://citationstyles.org/).
 
-Uses [Citepro-PHP](https://github.com/seboettg/citeproc-php) for parsing and formatting. `JSON` is a more reliable format than Bibtex, Ris, and EndNote, and conversion to it should be possible with most modern bibliography managers.
+Uses [Citeproc-PHP](https://github.com/seboettg/citeproc-php) for parsing and formatting. `JSON` is a more reliable format than Bibtex, Ris, and EndNote, and conversion to it should be possible with most modern bibliography managers (eg. [Zotero](https://www.zotero.org/)).
 
 ## Installation and Configuration
 
-1. Download the zip version of [this repository](https://github.com/OleVik/grav-plugin-bibliography) and unzip it under `/your/site/grav/user/plugins`.
+1. Download the zip version of [this repository](https://github.com/OleVik/grav-plugin-bibliography/archive/master.zip) and unzip it under `/your/site/grav/user/plugins`.
 2. Rename the folder to `bibliography`.
 
 You should now have all the plugin files under
@@ -25,7 +25,7 @@ pages:
 
 ## Usage
 
-Copy your properly formatted bibliography-file to the same folder as the page you which to display it on, and set a FrontMatter-variable to point to the file, like so:
+In the plugin's settings, use the upload-field to add any bibliography-files. These are stored in `/user/data/bibliography`, and can be selected in the Admin-interface under the Options tab, or set manually with a FrontMatter-variable, like so:
 
 ```
 ---
@@ -34,7 +34,7 @@ bibliography: citations.json
 ---
 ```
 
-For example, using [this file](https://bitbucket.org/fbennett/citeproc-js/src/2b552c68ca2a891d3869ebdfa5167115cc5e546f/demo/citations.json?at=default&fileviewer=file-view-default) as `citations.json`, with the default options, returns this:
+Or whatever you named the file that was uploaded. For example, using [this file](https://bitbucket.org/fbennett/citeproc-js/src/2b552c68ca2a891d3869ebdfa5167115cc5e546f/demo/citations.json?at=default&fileviewer=file-view-default) as `citations.json`, with the default options, returns this:
 
 ```
 [^Item-1]: Knuth, D. E. (1998). Digital Typography. Center for the Study of Language and Information.
@@ -51,10 +51,10 @@ You reference these by their identifier, for example `[^Item-1]` (see [Markdown 
 |--------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | bibliography |  | Filename of a bibliography file, for example `citations.json`, set on a page-level. |
 | enabled | true | `true` to enable the plugin, `false` to disable it. |
-| bibliography_style | "apa" | Style to use for formatting citations, must match a [.csl](http://citationstyles.org/styles/)-file in `/vendor/academicpuma/styles`. |
-| bibliography_lang | "en-US" | Language to use for formatting citations, must match a [.xml](https://packagist.org/packages/academicpuma/locales)-file in `/vendor/academicpuma/locales`. |
+| bibliography_style | "apa-5th-edition" | Style to use for formatting citations, must match a [.csl](http://citationstyles.org/styles/)-file in `/vendor/citation-style-language/styles-distribution`. |
+| bibliography_lang | "en-US" | Language to use for formatting citations, must match a [.xml](https://packagist.org/packages/academicpuma/locales)-file in `/vendor/citation-style-language/locales`. |
 
-The included styles and locales are ample and should cover most use-cases, but more can be installed into the relevant directories (see above links to sources).
+The included style and locale are only the defaults, and more can be installed into `/your/site/grav/user/plugins/bibliography/vendor/citation-style-language`. Locale-files go into `... /vendor/citation-style-language/locales` and styles go into `... /vendor/citation-style-language/styles-distribution`, and are available from [here](https://github.com/citation-style-language/locales) and [here](https://github.com/citation-style-language/styles-distribution), respectively.
 
 ## Caveats
 
@@ -68,6 +68,6 @@ Performance may be slow on initial load with a large bibliography, but if cached
 | 1000 | 3.45s | 581 KB |
 | 10.000 | 49.66s | 5.69 MB |
 
-These numbers are the time needed by the plugin to read and render a JSON-file with a bibliography, and do not represent the load impact on a live, cached site.
+These numbers are the time needed by the plugin to read and render a JSON-file with a bibliography, and do not represent the load impact on a live, cached site. If developing with the Debugger enabled, the Bibliography-rendering is logged into the Timeline.
 
-MIT License 2016 by [Ole Vik](https://olevik.me/).
+MIT License 2018 by [Ole Vik](https://olevik.me/).
