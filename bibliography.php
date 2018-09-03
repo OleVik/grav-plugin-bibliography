@@ -46,6 +46,10 @@ class BibliographyPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
+        $system = (array) $this->config->get('system');
+        if ($system['debugger']['enabled']) {
+            $this->grav['debugger']->startTimer('bibliography', 'Bibliography');
+        }
         if ($this->isAdmin()) {
             $this->active = false;
             $this->enable(
@@ -59,6 +63,9 @@ class BibliographyPlugin extends Plugin
                     'onPageContentRaw' => ['onPageContentRaw', 0]
                 ]
             );
+        }
+        if ($system['debugger']['enabled']) {
+            $this->grav['debugger']->stopTimer('bibliography');
         }
     }
 
@@ -74,9 +81,6 @@ class BibliographyPlugin extends Plugin
         $page = $event['page'];
         $plugin = (array) $this->config->get('plugins');
         $system = (array) $this->config->get('system');
-        if ($system['debugger']['enabled']) {
-            $this->grav['debugger']->startTimer('bibliography', 'Bibliography');
-        }
 
         $extra = [
             "csl-entry" => function ($cslItem, $renderedText) {
@@ -85,35 +89,35 @@ class BibliographyPlugin extends Plugin
         ];
 
         $page = $this->grav['page'];
-        if ($system['pages']['markdown']['extra']) {
-            if (isset($plugin['bibliography'])) {
-                if ($plugin['bibliography']['enabled']) {
-                    if (isset($page->header()->bibliography)) {
-                        $bibliography = $page->header()->bibliography;
-                        $bibfile = 'user://data/bibliography/' . $bibliography;
-                        if (file_exists($bibfile)) {
-                            $fileinfo = pathinfo($bibfile);
-                            if ($fileinfo['extension'] == 'json') {
-                                $raw = $page->getRawContent();
-                                $styleName = $plugin['bibliography']['style'];
-                                $lang = $plugin['bibliography']['locale'];
-                                $style = StyleSheet::loadStyleSheet($styleName);
-                                $citeProc = new CiteProc($style, $lang, $extra);
-                                $file = file_get_contents($bibfile);
-                                $data = json_decode($file);
-                                $biblio = $citeProc->render($data, "bibliography");
-                                $biblio = strip_tags($biblio);
-                                $raw .= "\n\n" . $biblio;
-                                $page->setRawContent($raw);
-                            }
-                        }
-                    }
-                }
-            }
+        if (!$system['pages']['markdown']['extra']) {
+            return;
         }
-        if ($system['debugger']['enabled']) {
-            $this->grav['debugger']->stopTimer('bibliography');
+        if (!isset($plugin['bibliography']) || !$plugin['bibliography']['enabled']) {
+            return;
         }
+        if (!isset($page->header()->bibliography)) {
+            return;
+        }
+        $bibliography = $page->header()->bibliography;
+        $bibfile = 'user://data/bibliography/' . $bibliography;
+        if (!file_exists($bibfile)) {
+            return;
+        }
+        $fileinfo = pathinfo($bibfile);
+        if (!$fileinfo['extension'] == 'json') {
+            return;
+        }
+        $raw = $page->getRawContent();
+        $styleName = $plugin['bibliography']['style'];
+        $lang = $plugin['bibliography']['locale'];
+        $style = StyleSheet::loadStyleSheet($styleName);
+        $citeProc = new CiteProc($style, $lang, $extra);
+        $file = file_get_contents($bibfile);
+        $data = json_decode($file);
+        $biblio = $citeProc->render($data, "bibliography");
+        $biblio = strip_tags($biblio);
+        $raw .= "\n\n" . $biblio;
+        $page->setRawContent($raw);
     }
 
     /**
