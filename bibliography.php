@@ -116,6 +116,7 @@ class BibliographyPlugin extends Plugin
         $data = json_decode($file);
         $biblio = $citeProc->render($data, "bibliography");
         $biblio = strip_tags($biblio);
+        $biblio = implode("\n", array_map('trim', explode("\n", $biblio)));
         $raw .= "\n\n" . $biblio;
         $page->setRawContent($raw);
     }
