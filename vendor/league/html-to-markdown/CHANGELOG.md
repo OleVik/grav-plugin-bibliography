@@ -4,6 +4,57 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [Unreleased][unreleased]
 
+## [4.10.0] - 2020-06-30
+### Added
+
+ - Added the ability to disable autolinking with a configuration option (#187, #188)
+
+## [4.9.1] - 2019-12-27
+### Fixed
+ - Fixed issue with HTML entity escaping in text (#184)
+
+## [4.9.0] - 2019-11-02
+### Added
+ - Added new option to preserve comments (#177, #179)
+
+## [4.8.3] - 2019-10-31
+### Fixed
+ - Fixed whitespace preservation around `<code>` tags (#174, #178)
+
+## [4.8.2] - 2019-08-02
+### Fixed
+ - Fixed headers not being placed onto a new line in some cases (#172)
+ - Fixed handling of links containing spaces (#175)
+
+### Removed
+ - Removed support for HHVM
+
+## [4.8.1] - 2018-12-24
+### Added
+ - Added support for PHP 7.3
+
+### Fixed
+ - Fixed paragraphs following tables (#165, #166)
+ - Fixed incorrect list item escaping (#168, #169)
+
+## [4.8.0] - 2018-09-18
+### Added
+ - Added support for email auto-linking
+ - Added a new interface (`HtmlConverterInterface`) for the main `HtmlConverter` class
+ - Added additional test cases (#14)
+
+### Changed
+ - The `italic_style` option now defaults to `'*'` so that in-word emphasis is handled properly (#75)
+
+### Fixed
+ - Fixed several issues of `<code>` and `<pre>` tags not converting to blocks or inlines properly (#26, #70, #102, #140, #161, #162)
+ - Fixed in-word emphasis using underscores as delimiter (#75)
+ - Fixed character escaping inside of `<div>` elements
+ - Fixed header edge cases
+
+### Deprecated
+ - The `bold_style` and `italic_style` options have been deprecated (#75)
+
 ## [4.7.0] - 2018-05-19
 ### Added
  - Added `setOptions()` function for chainable calling (#149)
@@ -217,7 +268,14 @@ not ideally set, so this releases fixes that. Moving forwards this should reduce
 ### Added
  - Initial release
 
-[unreleased]: https://github.com/thephpleague/html-to-markdown/compare/4.7.0...master
+[unreleased]: https://github.com/thephpleague/html-to-markdown/compare/4.10.0...master
+[4.10.0]: https://github.com/thephpleague/html-to-markdown/compare/4.9.1...4.10.0
+[4.9.1]: https://github.com/thephpleague/html-to-markdown/compare/4.9.0...4.9.1
+[4.9.0]: https://github.com/thephpleague/html-to-markdown/compare/4.8.3...4.9.0
+[4.8.3]: https://github.com/thephpleague/html-to-markdown/compare/4.8.2...4.8.3
+[4.8.2]: https://github.com/thephpleague/html-to-markdown/compare/4.8.1...4.8.2
+[4.8.1]: https://github.com/thephpleague/html-to-markdown/compare/4.8.0...4.8.1
+[4.8.0]: https://github.com/thephpleague/html-to-markdown/compare/4.7.0...4.8.0
 [4.7.0]: https://github.com/thephpleague/html-to-markdown/compare/4.6.2...4.7.0
 [4.6.2]: https://github.com/thephpleague/html-to-markdown/compare/4.6.1...4.6.2
 [4.6.1]: https://github.com/thephpleague/html-to-markdown/compare/4.6.0...4.6.1

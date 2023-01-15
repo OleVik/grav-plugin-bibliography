@@ -5,7 +5,7 @@ citation
 
 
 >>===== RESULT =====>>
-[start](pages : 22-45)[end]
+[start](pages : 22–45)[end]
 <<===== RESULT =====<<
 
 
@@ -36,9 +36,9 @@ citation
 >>===== INPUT =====>>
 [
     {
-        "id": "ITEM-1", 
-        "page": "22-45", 
-        "title": "His Anonymous Life", 
+        "id": "ITEM-1",
+        "page": "22-45",
+        "title": "His Anonymous Life",
         "type": "book"
     }
 ]

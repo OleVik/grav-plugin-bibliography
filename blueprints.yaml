@@ -1,5 +1,5 @@
 name: Bibliography
-version: 2.0.2
+version: 3.0.0
 description: "Renders a Bibliography-file into footnotes and appends it to the page."
 icon: book
 author:

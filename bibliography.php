@@ -1,4 +1,5 @@
 <?php
+
 namespace Grav\Plugin;
 
 use Grav\Common\Data;
@@ -7,7 +8,6 @@ use Grav\Common\Grav;
 use Grav\Common\Page\Page;
 use Grav\Common\Data\Blueprints;
 use RocketTheme\Toolbox\Event\Event;
-require __DIR__ . '/vendor/autoload.php';
 use Seboettg\CiteProc\StyleSheet;
 use Seboettg\CiteProc\CiteProc;
 
@@ -37,6 +37,16 @@ class BibliographyPlugin extends Plugin
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0]
         ];
+    }
+
+    /**
+     * Composer autoload.
+     *
+     * @return \Composer\Autoload\ClassLoader
+     */
+    public function autoload(): \Composer\Autoload\ClassLoader
+    {
+        return include __DIR__ . '/vendor/autoload.php';
     }
 
     /**

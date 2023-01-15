@@ -22,7 +22,9 @@ class TextConverter implements ConverterInterface
         $markdown = preg_replace('~\s+~u', ' ', $markdown);
 
         // Escape the following characters: '*', '_', '[', ']' and '\'
-        $markdown = preg_replace('~([*_\\[\\]\\\\])~u', '\\\\$1', $markdown);
+        if ($element->getParent() && $element->getParent()->getTagName() !== 'div') {
+            $markdown = preg_replace('~([*_\\[\\]\\\\])~u', '\\\\$1', $markdown);
+        }
 
         $markdown = preg_replace('~^#~u', '\\\\#', $markdown);
 
@@ -33,7 +35,7 @@ class TextConverter implements ConverterInterface
             }
         }
 
-        return $markdown;
+        return htmlspecialchars($markdown, ENT_NOQUOTES, 'UTF-8');
     }
 
     /**

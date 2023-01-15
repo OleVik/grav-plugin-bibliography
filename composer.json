@@ -1,12 +1,12 @@
 {
-    "name": "Grav Bibliography-plugin",
+    "name": "olevik/grav-plugin-bibliography",
     "description": "Reads a Bibliography-file (.json) with academic references and renders it as footnotes at the end of the page. Allows for a variety of styles and languages using CSL.",
 	"minimum-stability": "dev",
 	"prefer-stable": true,
     "require": {
-        "seboettg/citeproc-php": "^2.1",
+        "seboettg/citeproc-php": "^2.5",
         "citation-style-language/locales": "1.0.0",
-        "citation-style-language/styles-distribution": "1.0.0",
+        "citation-style-language/styles": "1.0.0",
 		"league/html-to-markdown": "^4.6"
     },
     "repositories": [
@@ -24,10 +24,10 @@
         {
             "type": "package",
             "package": {
-                "name": "citation-style-language/styles-distribution",
+                "name": "citation-style-language/styles",
                 "version": "1.0.0",
                 "dist": {
-                    "url": "https://raw.githubusercontent.com/citation-style-language/styles-distribution/master/apa-5th-edition.csl",
+                    "url": "https://raw.githubusercontent.com/citation-style-language/styles/master/apa-5th-edition.csl",
                     "type": "file"
                 }
             }
