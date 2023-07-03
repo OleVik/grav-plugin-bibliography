@@ -1,3 +1,10 @@
+# v3.0.1
+
+## 03-07-2023
+
+1. [](#bugfix)
+   - Look for Page-config first
+
 # v3.0.0
 
 ## 15-01-2023

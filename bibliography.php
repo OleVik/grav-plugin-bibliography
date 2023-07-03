@@ -13,13 +13,13 @@ use Seboettg\CiteProc\CiteProc;
 
 /**
  * Bibliography Plugin Class
- * 
- * Reads a Bibliography-file (.json) with academic references 
- * and renders it as footnotes at the end of the page. 
+ *
+ * Reads a Bibliography-file (.json) with academic references
+ * and renders it as footnotes at the end of the page.
  * Allows for a variety of styles and languages using CSL.
  *
  * Class BibliographyPlugin
- * 
+ *
  * @package Grav\Plugin
  * @return  string Formatted Markdown Footnotes
  * @author  Ole Vik <git@olevik.me>
@@ -56,8 +56,7 @@ class BibliographyPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-        $system = (array) $this->config->get('system');
-        if ($system['debugger']['enabled']) {
+        if ($this->config->get('system.debugger.enabled')) {
             $this->grav['debugger']->startTimer('bibliography', 'Bibliography');
         }
         if ($this->isAdmin()) {
@@ -74,7 +73,7 @@ class BibliographyPlugin extends Plugin
                 ]
             );
         }
-        if ($system['debugger']['enabled']) {
+        if ($this->config->get('system.debugger.enabled')) {
             $this->grav['debugger']->stopTimer('bibliography');
         }
     }
@@ -83,46 +82,43 @@ class BibliographyPlugin extends Plugin
      * Process raw Markdown and footnotes
      *
      * @param Event $event RocketTheme\Toolbox\Event\Event
-     * 
+     *
      * @return void
      */
     public function onPageContentRaw(Event $event)
     {
-        $page = $event['page'];
-        $plugin = (array) $this->config->get('plugins');
-        $system = (array) $this->config->get('system');
-
+        $page = $this->grav['page'];
         $extra = [
             "csl-entry" => function ($cslItem, $renderedText) {
                 return '[^' . trim($cslItem->id, "[]") . ']: ' . $renderedText;
             }
         ];
 
-        $page = $this->grav['page'];
-        if (!$system['pages']['markdown']['extra']) {
+        if (!$this->config->get('system.pages.markdown.extra')) {
+            $this->grav['log']->warning('Bibliography: Markdown Extra disabled, returning ...');
             return;
         }
-        if (!isset($plugin['bibliography']) || !$plugin['bibliography']['enabled']) {
-            return;
-        }
-        if (!isset($page->header()->bibliography)) {
+        if (!isset($page->header()->bibliography) || $page->header()->bibliography == "") {
+            $this->grav['log']->warning('Bibliography: No bibliography set, returning ...');
             return;
         }
         $bibliography = $page->header()->bibliography;
-        $bibfile = 'user://data/bibliography/' . $bibliography;
-        if (!file_exists($bibfile)) {
+        $library = 'user://data/bibliography/' . $bibliography;
+        if (!file_exists($library)) {
+            $this->grav['log']->warning('Bibliography: Referenced library does not exist, returning ...');
             return;
         }
-        $fileinfo = pathinfo($bibfile);
+        $fileinfo = pathinfo($library);
         if (!$fileinfo['extension'] == 'json') {
+            $this->grav['log']->warning('Bibliography: Referenced library is not JSON, returning ...');
             return;
         }
         $raw = $page->getRawContent();
-        $styleName = $plugin['bibliography']['style'];
-        $lang = $plugin['bibliography']['locale'];
-        $style = StyleSheet::loadStyleSheet($styleName);
-        $citeProc = new CiteProc($style, $lang, $extra);
-        $file = file_get_contents($bibfile);
+        $Style = $page->header()->bibliography_style ?? $this->config->get('plugins.bibliography.style') ?? 'apa-5th-edition';
+        $Locale = $page->header()->bibliography_lang ?? $this->config->get('plugins.bibliography.locale') ?? 'en-US';
+        $style = StyleSheet::loadStyleSheet($Style);
+        $citeProc = new CiteProc($style, $Locale, $extra);
+        $file = file_get_contents($library);
         $data = json_decode($file);
         $biblio = $citeProc->render($data, "bibliography");
         $biblio = strip_tags($biblio);
@@ -135,7 +131,7 @@ class BibliographyPlugin extends Plugin
      * Register blueprints
      *
      * @param Event $event RocketTheme\Toolbox\Event\Event
-     * 
+     *
      * @return void
      */
     public function onBlueprintCreated(Event $event)

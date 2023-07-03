@@ -1,5 +1,5 @@
 name: Bibliography
-version: 3.0.0
+version: 3.0.1
 description: "Renders a Bibliography-file into footnotes and appends it to the page."
 icon: book
 author:
@@ -27,7 +27,7 @@ form:
       type: file
       label: Bibliography-files
       multiple: true
-      destination: 'user/data/bibliography'
+      destination: "user/data/bibliography"
       random_name: false
       avoid_overwriting: false
       limit: 10
